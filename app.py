@@ -4,34 +4,32 @@ from torch import nn
 from PIL import Image
 from torchvision import transforms
 import gdown
+from torchvision import models
 
-# Define the transformation
+
 transform = transforms.Compose([
-    transforms.Resize((224, 224)),  # Assuming the model expects 224x224 images
+    transforms.Resize((224, 224)),  
     transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # ImageNet normalization
+    transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]) 
 ])
 
 # Google Drive link to the model file
 file_id = '1C45H947jWNxeVMa0bZe-qW0aV47wwYNG'
 url = f'https://drive.google.com/uc?id={file_id}'
-output = 'ai_vs_real_model.pth'
+output = 'alzheimers_mri_classification.pth'
 gdown.download(url, output, quiet=False)
 
-# Assuming model is defined or loaded elsewhere in your script
-from torchvision import models
 
-# Initialize the model
+
 model = models.resnet50()
 num_ftrs = model.fc.in_features
-model.fc = nn.Linear(num_ftrs, 4)  # Set the output size to match your project's classes
-# Load the state dict into the model
+model.fc = nn.Linear(num_ftrs, 4)  
 model.load_state_dict(torch.load(output, map_location=torch.device('cpu')))
 
 model.eval()
 
 def predict(image):
-    image = transform(image).unsqueeze(0)  # Add batch dimension
+    image = transform(image).unsqueeze(0)  
     with torch.no_grad():
         output = model(image)
         predicted_class = torch.argmax(output, dim=1).item()
