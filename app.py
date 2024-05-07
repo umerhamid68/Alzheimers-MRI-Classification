@@ -44,7 +44,7 @@ def predict(image):
     return class_labels[predicted_class]
 
 # Streamlit interface
-st.title('Dementia MRI Scan Classifier')
+st.title('Alzheimers MRI Scan Classifier')
 uploaded_file = st.file_uploader("Upload an MRI scan image...", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
